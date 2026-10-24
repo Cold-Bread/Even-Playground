@@ -16,3 +16,22 @@ Think about re-entry. If the user exits mid-chapter, their next session should p
 Respect the input ergonomics of the ring. Tap to advance is the obvious default, but remember that the R1 also understands swipes and long-press. A swipe back gesture for "previous page" is worth wiring up; otherwise a stray tap becomes a mild annoyance because it can't be undone.
 
 Finally: don't fight the medium. This isn't a phone and it isn't an e-reader. Text-heavy apps on G2 work best when they stay short, stay structured, and let the user drive the pace.`
+
+export function getChapter (){
+//get HTML from chapter div
+let innerHTML = document?.getElementsByClassName("chapter-inner chapter-content text-on-surface")[0].innerHTML
+
+// innerHTML.dreaded regex parsing
+// will need to see how RR text boxes work with current pagination. Assume functioning for now
+const CLEAN_TEXT = innerHTML
+return CLEAN_TEXT;
+}
+
+
+
+
+
+
+
+
+
