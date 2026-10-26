@@ -17,7 +17,7 @@ const BODY_BORDER = 0
 const INNER_W = BODY_W - 2 * (BODY_PAD + BODY_BORDER)
 const INNER_H = BODY_H - 2 * (BODY_PAD + BODY_BORDER)
 
-const pages = paginate("getChapter LINKS HERE", { width: INNER_W, height: INNER_H })
+const pages = paginate(SAMPLE_TEXT, { width: INNER_W, height: INNER_H })
 let currentPage = 0
 
 const bridge = await waitForEvenAppBridge()
@@ -144,34 +144,26 @@ const unsubscribe = bridge.onEvenHubEvent(event => {
 window.addEventListener('beforeunload', cleanup)
 
 const app = document.querySelector<HTMLDivElement>('#app')!
-
-
+window.open('https://www.google.com', '_self');
+//
 app.innerHTML = `
-  <main style="margin:auto;padding:24px;max-width:680px;box-sizing:border-box;">
-    <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-      <h1 style="font-size:18px;font-weight:600;margin:0;">Text-Heavy Reader</h1>
-      <span id="pageCount" style="font-size:12px;color:#919191;"></span>
-      <button id="myButton">Open RoyalRoad</button>
-
-
-    </header>
-    <pre id="mirror" style="background:#2E2E2E;border:1px solid #3E3E3E;border-radius:12px;padding:20px;font-size:15px;line-height:1.55;white-space:pre-wrap;word-break:break-word;color:#E5E5E5;margin:0;"></pre>
-    <footer style="font-size:12px;color:#7B7B7B;text-align:center;margin-top:16px;">
-      Tap glasses: next page · swipe up: previous · double-tap: exit
-    </footer>
-
-
+  <main id="main">
   </main>
 `
-const button = document.getElementById('myButton');
+// const button = document.getElementById('myButton');
+// button?.addEventListener('click', () => {
+//     window.open('https://www.royalroad.com/home', '_self');
+// });
 
-button?.addEventListener('click', () => {
-    window.open('https://www.royalroad.com/home', '_self');
-});
+//NOTES:
+/*
+QUESTIONS for chat: 
+how can my app commuicate with tampermonkey. is any thing specific needed.
 
-const button2 = document.getElementById('myButton2');
-
-button2?.addEventListener('click', () => {
+- internal chapter library. store scraped chapters and latest chapter number for manual resync
+*/
+const startChapter = document.getElementById('startChapter');
+startChapter?.addEventListener('click', () => {
   getChapter();
 });
 
