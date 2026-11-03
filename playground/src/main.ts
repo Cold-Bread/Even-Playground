@@ -150,6 +150,7 @@ app.innerHTML = `
   <main id="main">
   </main>
 `
+//WONT WORK
 // const button = document.getElementById('myButton');
 // button?.addEventListener('click', () => {
 //     window.open('https://www.royalroad.com/home', '_self');
@@ -158,7 +159,9 @@ app.innerHTML = `
 //NOTES:
 /*
 QUESTIONS for chat: 
-how can my app commuicate with tampermonkey. is any thing specific needed.
+brave has a built in userscript service
+- uBlock Origin–style syntax instead of .user.js scripts
+- pretty sure it was document.getElementByClassName('chpater class thingy')[0].innerHTML
 
 - internal chapter library. store scraped chapters and latest chapter number for manual resync
 */
