@@ -99,14 +99,6 @@ function parseHTML(rawHTML) {
     .trim();
 }
 
-function nextChapter(NEXT_CHAPTER_BUTTON) {
-  window.addEventListener("Next Chapter", () => {
-    if (button) {
-      button.click();
-    }
-  });
-}
-
 function addScraperUI({ onScrape }) {
   const panel = document.createElement("div");
   panel.id = "rr-scraper-ui";
@@ -136,21 +128,31 @@ function addScraperUI({ onScrape }) {
 (function () {
   "use strict";
   const NEXT_CHAPTER_BUTTON = document.querySelector("#my-button-id"); // Use your specific selector
-  const chapters = new Array();
+
+  const chapters = new Map();
 
   addScraperUI({
     onScrape(NumToScrape) {
-      for (i = 0; i < NumToScrape; i++) {
+      let scraped = 0;
+      for (i = scraped; i < NumToScrape; i++) {
+        const chapterTitle = document.querySelector(); //GET CHAPTER TITLE ELEMENT
+
         const rawHTML = window?.getElementsByClassName(
           "chapter-inner chapter-content text-on-surface",
         )[0].innerHTML;
 
         if (!rawHtml) return;
-        chapters.push(parseHTML(rawHTML));
 
-        NEXT_CHAPTER_BUTTON.disabled
-          ? console.log("Next Chapter Unavailable")
-          : nextChapter(NEXT_CHAPTER_BUTTON);
+        if (!chapters.has(chapterTitle)) {
+          chapters.set(chapterTitle, parseHTML(rawHTML));
+          scraped++; // only bump when it's new
+        }
+
+        if (NEXT_CHAPTER_BUTTON.disabled) {
+          console.log("Next Chapter Unavailable");
+          break;
+        }
+        NEXT_CHAPTER_BUTTON.click();
       }
 
       console.log(text); // TESTING
