@@ -26,7 +26,7 @@
 4. 
 */
 
-async function postChapter(chapter) {
+async function postChapters(chapters) {
   try {
     //api request
     GM_xmlhttpRequest({
@@ -35,7 +35,7 @@ async function postChapter(chapter) {
       headers: {
         "Content-Type": "application/json",
       },
-      data: { chapter },
+      data: { chapters },
       onload: function (response) {
         console.log(response.responseText);
       },
@@ -99,12 +99,62 @@ function parseHTML(rawHTML) {
     .trim();
 }
 
+function nextChapter(NEXT_CHAPTER_BUTTON) {
+  window.addEventListener("Next Chapter", () => {
+    if (button) {
+      button.click();
+    }
+  });
+}
+
+function addScraperUI({ onScrape }) {
+  const panel = document.createElement("div");
+  panel.id = "rr-scraper-ui";
+  Object.assign(panel.style, {
+    position: "fixed",
+    bottom: "16px",
+    right: "16px",
+    zIndex: "999999",
+    display: "flex",
+    gap: "8px",
+  });
+  const currentChapBtn = document.createElement("button");
+  btn.type = "button";
+  btn.textContent = "Scrape Current Chapter";
+  btn.addEventListener("click", () => onScrape(1));
+  panel.append(currentChapBtn);
+
+  const fiveChapBtn = document.createElement("button");
+  btn.type = "button";
+  btn.textContent = "Scrape Five Chapters";
+  btn.addEventListener("click", () => onScrape(4));
+  panel.append(fiveChapBtn);
+
+  document.body.append(panel);
+}
+
 (function () {
   "use strict";
+  const NEXT_CHAPTER_BUTTON = document.querySelector("#my-button-id"); // Use your specific selector
+  const chapters = new Array();
 
-  const rawHTML = window?.getElementsByClassName(
-    "chapter-inner chapter-content text-on-surface",
-  )[0].innerHTML;
+  addScraperUI({
+    onScrape(NumToScrape) {
+      for (i = 0; i < NumToScrape; i++) {
+        const rawHTML = window?.getElementsByClassName(
+          "chapter-inner chapter-content text-on-surface",
+        )[0].innerHTML;
 
-  postChapter(parseHTML(rawHTML));
+        if (!rawHtml) return;
+        chapters.push(parseHTML(rawHTML));
+
+        NEXT_CHAPTER_BUTTON.disabled
+          ? console.log("Next Chapter Unavailable")
+          : nextChapter(NEXT_CHAPTER_BUTTON);
+      }
+
+      console.log(text); // TESTING
+      postChapters(chapters);
+    },
+  });
 })();
