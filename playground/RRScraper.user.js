@@ -26,18 +26,18 @@
 4. 
 */
 
-async function postChapters(chapters) {
+async function postChapters(bookInfo, chapters) {
   try {
     //api request
     GM_xmlhttpRequest({
       method: "POST",
-      url: "https://example.com/", //even access point
+      url: "https://xhgfzatdkuinipfuxtxn.supabase.co/rest/v1/CHAPTERS", //supabase access point
       headers: {
         "Content-Type": "application/json",
       },
-      data: { chapters },
+      data: { bookInfo, chapters },
       onload: function (response) {
-        console.log(response.responseText);
+        console.log(response.responseText); //TESTING
       },
     });
 
@@ -125,6 +125,25 @@ function addScraperUI({ onScrape }) {
   document.body.append(panel);
 }
 
+function getTitles() {
+  const root = document.getElementById("chapterHeroData");
+  if (!root) return null;
+
+  const bookLink = root.querySelector('a[href^="/fiction/"]');
+  const book = bookLink?.querySelector("h2")?.textContent?.trim() ?? null;
+  const chapter = root.querySelector("h1")?.textContent?.trim() ?? null;
+  const fictionMatch = bookLink
+    ?.getAttribute("href")
+    ?.match(/^\/fiction\/(\d+)\//);
+
+  return {
+    book,
+    chapter,
+    fictionId: fictionMatch?.[1] ?? null,
+    fictionHref: bookLink?.getAttribute("href") ?? null,
+  };
+}
+
 (function () {
   "use strict";
   const NEXT_CHAPTER_BUTTON = document.querySelector("#my-button-id"); // Use your specific selector
@@ -133,18 +152,17 @@ function addScraperUI({ onScrape }) {
 
   addScraperUI({
     onScrape(NumToScrape) {
+      let bookInfo = getTitles();
       let scraped = 0;
       for (i = scraped; i < NumToScrape; i++) {
-        const chapterTitle = document.querySelector(); //GET CHAPTER TITLE ELEMENT
-
         const rawHTML = window?.getElementsByClassName(
           "chapter-inner chapter-content text-on-surface",
         )[0].innerHTML;
 
         if (!rawHtml) return;
 
-        if (!chapters.has(chapterTitle)) {
-          chapters.set(chapterTitle, parseHTML(rawHTML));
+        if (!chapters.has(bookInfo.chapter)) {
+          chapters.set(bookInfo.chapter, parseHTML(rawHTML));
           scraped++; // only bump when it's new
         }
 
@@ -156,7 +174,7 @@ function addScraperUI({ onScrape }) {
       }
 
       console.log(text); // TESTING
-      postChapters(chapters);
+      postChapters(bookInfo, chapters);
     },
   });
 })();
